@@ -3,10 +3,10 @@ from celery import Celery
 from datetime import timedelta
 from django.conf import settings
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sendcld.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 
 BROKER = settings.CACHES['default']['LOCATION']
-app = Celery('sendcld', broker=BROKER)
+app = Celery('backend', broker=BROKER)
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
 # app.conf.beat_scheduler = 'django_celery_beat.schedulers:DatabaseScheduler'

@@ -19,3 +19,7 @@ RUN apt-get update && \
 
 # copy project
 COPY . .
+
+ADD start.sh /
+RUN chmod +x /start.sh
+CMD ["/start.sh"]
