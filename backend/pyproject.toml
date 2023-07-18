@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = "A feed parser app written with Python and Django"
+authors = ["Payam"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Django = "4.2.2"
+djangorestframework = "^3.14.0"
+django-extensions = "^3.2.3"
+django-filter = "^23.2"
+psycopg2-binary = "^2.9.6"
+redis = "^4.6.0"
+gunicorn = "^21.1.0"
+celery = "^5.3.1"
+python-dotenv = "^1.0.0"
+requests = "^2.31.0"
+flake8 = "^6.0.0"
+feedparser = "^6.0.10"
+drf-spectacular = "^0.26.3"
+mkdocstrings = "^0.22.0"
+mkdocs = "^1.4.3"
+mkdocs-material = "^9.1.19"
+mkdocstrings-python = "^1.2.0"
+django-stubs = "^4.2.3"
+djangorestframework-stubs = "^3.14.2"
+celery-stubs = "^0.1.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

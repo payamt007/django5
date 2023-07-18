@@ -2,7 +2,7 @@ import feedparser
 from rest_framework import viewsets
 from rest_framework import mixins
 from base.models import Post, Feed
-from api.serilizers import PostSerializer, FeedSerializer, FilterSerializer, ForceRefreshSerializer, UpdatePostSerializer
+from base.serializers import PostSerializer, FeedSerializer, FilterSerializer, ForceRefreshSerializer, UpdatePostSerializer
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
