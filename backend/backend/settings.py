@@ -41,10 +41,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "base",
     "drf_spectacular",
+    "corsheaders",
     # 'django_celery_beat',
 ]
 
 MIDDLEWARE = [
+     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -152,3 +154,8 @@ SPECTACULAR_SETTINGS = {
 }
 
 FEED_READER = {"MAX_FEED_READER_ERRORS": 5, "FEED_READER_RETRY_TIME": 200}
+
+CORS_ALLOWED_ORIGINS = ["https://limis.ir", "https://immigo.org", "http://127.0.0.1:3000",
+                        "http://127.0.0.1:5500", "https://provider.immigo.org", "https://profile-app.immigo.org"]
+CORS_ALLOW_METHODS = ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"]
+CORS_ALLOW_HEADERS = "*"
