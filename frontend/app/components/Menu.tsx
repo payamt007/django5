@@ -1,24 +1,63 @@
-import Link from '@mui/material/Link';
-import Box from '@mui/material/Box';
+'use client'
 
-const preventDefault = (event: React.SyntheticEvent) => event.preventDefault();
+import {
+  AppstoreOutlined,
+  CalendarOutlined,
+  LinkOutlined,
+  MailOutlined,
+  SettingOutlined,
+} from '@ant-design/icons';
+import { Divider, Menu, Switch } from 'antd';
+import type { MenuProps, MenuTheme } from 'antd/es/menu';
+import Link from 'next/link'
+type MenuItem = Required<MenuProps>['items'][number];
 
-
-export default function Links() {
-  return (
-    <Box
-      sx={{
-        typography: 'body1',
-        '& > :not(style) ~ :not(style)': {
-          ml: 2,
-        },
-      }}
-    >
-      <Link href="/">Home</Link>
-      <Link href="/feeds/">Feeds</Link>
-      <Link href="#" variant="body2">
-        {'variant="body2"'}
-      </Link>
-    </Box>
-  );
+function getItem(
+  label: React.ReactNode,
+  key?: React.Key | null,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+  } as MenuItem;
 }
+
+const items: MenuItem[] = [
+  getItem(
+    <Link  href="/">
+      Home
+    </Link >,
+    'link-0',
+    <LinkOutlined />,
+  ),
+  getItem(
+    <Link  href="/feeds">
+      Feeds
+    </Link>,
+    'link-1',
+    <LinkOutlined />,
+  ),
+  
+];
+
+const App: React.FC = () => {
+  return (
+    <>
+      <Divider type="vertical" />
+      <br />
+      <br />
+      <Menu
+        style={{ width: 256 }}
+        defaultSelectedKeys={['1']}
+        defaultOpenKeys={['sub1']}
+        items={items}
+      />
+    </>
+  );
+};
+
+export default App;

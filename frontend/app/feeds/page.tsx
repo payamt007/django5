@@ -2,6 +2,16 @@
 'use client'
 
 import { useGetAllFeedsQuery } from "@/lib/services/feed"
+import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+
+const columns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', width: 70 },
+  { field: 'title', headerName: 'Title', width: 130 },
+  { field: 'link', headerName: 'Link', width: 130 },
+  { field: 'followed', headerName: 'Followed', width: 20 },
+  { field: 'stopeed', headerName: 'Stopeed', width: 20 },
+  { field: 'fails', headerName: 'Fails', width: 20 },
+];
 
 export default function Page() {
   const { data, error, isLoading } = useGetAllFeedsQuery()
