@@ -1,7 +1,7 @@
 /* Components */
 import { Providers } from '@/lib/providers'
 import MainMenu from './components/Menu'
-import { Anchor, Row, Col } from 'antd';
+import { Row, Col } from 'antd';
 import StyledComponentsRegistry from '@/lib/AntdRegistry';
 
 export default function RootLayout({ children, }: { children: React.ReactNode }) {
@@ -10,8 +10,10 @@ export default function RootLayout({ children, }: { children: React.ReactNode })
       <html lang="en">
         <body>
           <StyledComponentsRegistry>
-            <MainMenu />
-            {children}
+            <Row>
+              <Col span={6}><MainMenu /></Col>
+              <Col span={18}>{children}</Col>
+            </Row>
           </StyledComponentsRegistry>
         </body>
       </html>

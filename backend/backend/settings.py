@@ -46,7 +46,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-     "corsheaders.middleware.CorsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -79,7 +79,7 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+""" DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": os.environ.get("POSTGRES_DB"),
@@ -88,12 +88,19 @@ DATABASES = {
         "HOST": os.environ.get("POSTGRES_HOST"),
         "PORT": os.environ.get("POSTGRES_PORT"),
     },
-}
+} """
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    },
+}
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        # "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
         "LOCATION": os.environ.get("REDIS_HOST"),
     }
 }
@@ -155,7 +162,13 @@ SPECTACULAR_SETTINGS = {
 
 FEED_READER = {"MAX_FEED_READER_ERRORS": 5, "FEED_READER_RETRY_TIME": 200}
 
-CORS_ALLOWED_ORIGINS = ["https://limis.ir", "https://immigo.org", "http://127.0.0.1:3000",
-                        "http://127.0.0.1:5500", "https://provider.immigo.org", "https://profile-app.immigo.org"]
+CORS_ALLOWED_ORIGINS = [
+    "https://limis.ir",
+    "https://immigo.org",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5500",
+    "https://provider.immigo.org",
+    "https://profile-app.immigo.org",
+]
 CORS_ALLOW_METHODS = ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"]
 CORS_ALLOW_HEADERS = "*"

@@ -3,6 +3,7 @@
 
 import { useGetAllFeedsQuery } from "@/lib/services/feed"
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import DataTable from "@/app/components/Table"
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 70 },
@@ -25,6 +26,7 @@ export default function Page() {
         <>Loading...</>
       ) : data ? (
         <>
+          <DataTable />
           <h3>{data.results}</h3>
         </>
       ) : null}
