@@ -26,7 +26,7 @@ const columns: ColumnsType<DataType> = [
     },
 ];
 
-const data: DataType[] = [
+/* const data: DataType[] = [
     {
         key: '1',
         name: 'John Brown',
@@ -51,17 +51,16 @@ const data: DataType[] = [
         age: 99,
         address: 'Sydney No. 1 Lake Park',
     },
-];
+]; */
 
 // rowSelection object indicates the need for row selection
 
 
-const Datatable: React.FC = () => {
+const Datatable: React.FC<{ data: DataType[] }> = ({data}) => {
     const rowSelection = {
         onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
             console.log(selectedRows.length)
             if (selectedRows.length > 0) {
-                console.log('kop')
                 setdeleteButton(true)
             } else if (selectedRows.length == 0)
                 setdeleteButton(false)
@@ -75,10 +74,13 @@ const Datatable: React.FC = () => {
     };
 
     const [deleteButton, setdeleteButton] = useState<boolean>(false);
+    const handleDeletButtonClick = () => {
+        console.log("clicked")
+    }
 
     return (
         <div>
-            {deleteButton ? <DeleteTwoTone style={{ fontSize: '150%' }}  /> : ''}
+            {deleteButton ? <DeleteTwoTone onClick={handleDeletButtonClick} style={{ fontSize: '150%' }} /> : ''}
 
             <Divider />
 
