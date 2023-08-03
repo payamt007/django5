@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Divider, Table,Space, Input } from 'antd';
+import { Divider, Table, Space, Input } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { DeleteTwoTone, PlusCircleTwoTone } from '@ant-design/icons'
-import { feedType  } from '@/lib/types/feeds';
-
+import { feedType } from '@/lib/types/feeds';
+import { useForm } from 'react-hook-form';
 
 const columns: ColumnsType<feedType> = [
     {
@@ -52,9 +52,11 @@ const Datatable: React.FC<{ data: feedType[] }> = ({ data }) => {
     const handleDeletButtonClick = () => {
         console.log("clicked")
     }
-    const handleAddFeed = () => {
-        console.log("clicked add")
+    const handleAddFeed = (data) => {
+        console.log(data)
     }
+
+    const { register, handleSubmit, formState: { errors }, } = useForm();
 
     return (
         <div>
@@ -70,12 +72,13 @@ const Datatable: React.FC<{ data: feedType[] }> = ({ data }) => {
             <div>
                 <PlusCircleTwoTone onClick={handleAddFeed} style={{ fontSize: '150%' }} />
             </div>
-            <Space.Compact>
-                <Input placeholder='Enter the title of feed' />
-                <br/>
-                <Input placeholder='Input The link of feed' />
-                <PlusCircleTwoTone />
-            </Space.Compact>
+            <form onSubmit={handleSubmit(handleAddFeed)}>
+                <input {...register('title', { required: true })} />
+                {errors.title && <p>Title is required.</p>}
+                <input {...register('link', { required: true })} />
+                {errors.link && <p>Link is required.</p>}
+                <input type="submit" value={'submit'} />
+            </form>
         </div>
     );
 };
