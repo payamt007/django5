@@ -1,64 +1,37 @@
 import React, { useState } from 'react';
-import { Divider, Table } from 'antd';
+import { Divider, Table,Space, Input } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { DeleteTwoTone } from '@ant-design/icons'
+import { DeleteTwoTone, PlusCircleTwoTone } from '@ant-design/icons'
+import { feedType  } from '@/lib/types/feeds';
 
-interface DataType {
-    key: React.Key;
-    name: string;
-    age: number;
-    address: string;
-}
 
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<feedType> = [
     {
-        title: 'Name',
-        dataIndex: 'name',
-        render: (text: string) => <a>{text}</a>,
+        title: 'Title',
+        dataIndex: 'title',
     },
     {
-        title: 'Age',
-        dataIndex: 'age',
+        title: 'Link',
+        dataIndex: 'link',
     },
     {
-        title: 'Address',
-        dataIndex: 'address',
+        title: 'Followed',
+        dataIndex: 'followed',
+    },
+    {
+        title: 'Stopped',
+        dataIndex: 'stopped',
+    },
+    {
+        title: 'Fails',
+        dataIndex: 'fails',
     },
 ];
 
-/* const data: DataType[] = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-    },
-    {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-    },
-    {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-    },
-    {
-        key: '4',
-        name: 'Disabled User',
-        age: 99,
-        address: 'Sydney No. 1 Lake Park',
-    },
-]; */
+const Datatable: React.FC<{ data: feedType[] }> = ({ data }) => {
 
-// rowSelection object indicates the need for row selection
-
-
-const Datatable: React.FC<{ data: DataType[] }> = ({data}) => {
     const rowSelection = {
-        onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+        onChange: (selectedRowKeys: React.Key[], selectedRows: feedType[]) => {
             console.log(selectedRows.length)
             if (selectedRows.length > 0) {
                 setdeleteButton(true)
@@ -67,23 +40,26 @@ const Datatable: React.FC<{ data: DataType[] }> = ({data}) => {
 
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
         },
-        getCheckboxProps: (record: DataType) => ({
+        getCheckboxProps: (record: feedType) => ({
             disabled: record.name === 'Disabled User', // Column configuration not to be checked
             name: record.name,
         }),
     };
 
     const [deleteButton, setdeleteButton] = useState<boolean>(false);
+    const [newLink, setnewLink] = useState<string>("");
+    const [newTitle, setnewTitle] = useState<string>("");
     const handleDeletButtonClick = () => {
         console.log("clicked")
+    }
+    const handleAddFeed = () => {
+        console.log("clicked add")
     }
 
     return (
         <div>
             {deleteButton ? <DeleteTwoTone onClick={handleDeletButtonClick} style={{ fontSize: '150%' }} /> : ''}
-
             <Divider />
-
             <Table
                 rowSelection={{
                     ...rowSelection,
@@ -91,6 +67,15 @@ const Datatable: React.FC<{ data: DataType[] }> = ({data}) => {
                 columns={columns}
                 dataSource={data}
             />
+            <div>
+                <PlusCircleTwoTone onClick={handleAddFeed} style={{ fontSize: '150%' }} />
+            </div>
+            <Space.Compact>
+                <Input placeholder='Enter the title of feed' />
+                <br/>
+                <Input placeholder='Input The link of feed' />
+                <PlusCircleTwoTone />
+            </Space.Compact>
         </div>
     );
 };
