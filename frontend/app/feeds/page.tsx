@@ -25,7 +25,7 @@ export default function Page() {
         <>Loading...</>
       ) : data ? (
         <>
-          <DataTable data={data.results}/>
+          <DataTable dataSource={data.results}/>
         </>
       ) : null}
     </div>

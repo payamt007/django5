@@ -6,26 +6,28 @@ import { feedType } from '../types/feeds'
 export const feedsApi = createApi({
   reducerPath: 'feedApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://127.0.0.1:8000/api' }),
+  tagTypes: ['Feeds'],
   endpoints: (build) => ({
     getAllFeeds: build.query<paginatedFeedType, void>({
       query: () => `feeds`,
+      providesTags: ['Feeds'],
     }),
-    updatePost: build.mutation<void, Pick<feedType, 'title' | 'link'>>({
+    createFeed: build.mutation<void, Pick<feedType, 'title' | 'link'>>({
       // note: an optional `queryFn` may be used in place of `query`
-      query: ({ ...patch }) => ({
-        url: `feeds`,
+      query: ({ ...body }) => ({
+        url: `feeds/`,
         method: 'POST',
-        body: patch,
+        body: body,
       }),
       // Pick out data and prevent nested properties in a hook or selector
-      transformResponse: (response: { data: Post }, meta, arg) => response.data,
+      transformResponse: (response: { data: void }, meta, arg) => response.data,
       // Pick out errors and prevent nested properties in a hook or selector
       transformErrorResponse: (
         response: { status: string | number },
         meta,
         arg
       ) => response.status,
-      invalidatesTags: ['feedType'],
+      invalidatesTags: ['Feeds'],
       // onQueryStarted is useful for optimistic updates
       // The 2nd parameter is the destructured `MutationLifecycleApi`
       async onQueryStarted(
@@ -52,4 +54,4 @@ export const feedsApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetAllFeedsQuery } = feedsApi
+export const { useGetAllFeedsQuery, useCreateFeedMutation } = feedsApi

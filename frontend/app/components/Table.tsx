@@ -4,6 +4,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { DeleteTwoTone, PlusCircleTwoTone } from '@ant-design/icons'
 import { feedType } from '@/lib/types/feeds';
 import { useForm } from 'react-hook-form';
+import { useCreateFeedMutation } from "@/lib/services/feed"
 
 const columns: ColumnsType<feedType> = [
     {
@@ -28,7 +29,9 @@ const columns: ColumnsType<feedType> = [
     },
 ];
 
-const Datatable: React.FC<{ data: feedType[] }> = ({ data }) => {
+const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
+
+    const [createFeed, { isLoading, isError, error }] = useCreateFeedMutation()
 
     const rowSelection = {
         onChange: (selectedRowKeys: React.Key[], selectedRows: feedType[]) => {
@@ -47,12 +50,11 @@ const Datatable: React.FC<{ data: feedType[] }> = ({ data }) => {
     };
 
     const [deleteButton, setdeleteButton] = useState<boolean>(false);
-    const [newLink, setnewLink] = useState<string>("");
-    const [newTitle, setnewTitle] = useState<string>("");
     const handleDeletButtonClick = () => {
         console.log("clicked")
     }
-    const handleAddFeed = (data) => {
+    const handleAddFeed = async (data) => {
+        await createFeed(data)
         console.log(data)
     }
 
@@ -67,7 +69,7 @@ const Datatable: React.FC<{ data: feedType[] }> = ({ data }) => {
                     ...rowSelection,
                 }}
                 columns={columns}
-                dataSource={data}
+                dataSource={dataSource}
             />
             <div>
                 <PlusCircleTwoTone onClick={handleAddFeed} style={{ fontSize: '150%' }} />
