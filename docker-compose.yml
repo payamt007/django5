@@ -24,7 +24,8 @@ services:
       - db
   worker:
     build: ./backend
-    command: celery -A backend.celery worker --loglevel=info --pool=solo
+    #command: celery -A backend.celery worker --loglevel=info --pool=solo
+    command: celery -A backend.celery worker --loglevel=info -P eventlet
     env_file:
       - ./backend/.env
     depends_on:
