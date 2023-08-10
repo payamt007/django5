@@ -3,7 +3,9 @@ from celery import shared_task
 from base.models import Feed, Post
 from django.core.cache import cache
 from django.conf import settings
+from celery.utils.log import get_task_logger
 
+logger = get_task_logger(__name__)
 
 @shared_task
 def read_feed_links() -> None:
@@ -11,15 +13,18 @@ def read_feed_links() -> None:
     This is the base background process that is runned by
     celery beat scheduler to get feeds from sources
     """
-    feeds = Feed.objects.filter(stopped=False, followed=True, fails=0)
-    for feed in feeds:
+    # feeds = Feed.objects.filter(stopped=False, followed=True, fails=0)
+    print("task start")
+    logger.info('task starddddddddddt')
+    Feed.objects.filter(stopped=False, followed=True, fails=0).update(followed=False)
+    """ for feed in feeds:
         try:
             feed_conetnt = feedparser.parse(feed.link)
             save_feed_items(feed_conetnt, feed)
         except Exception:
             feed.fails = feed.fails + 1
             feed.save()
-            retry_failed_feeds.apply_async(args=[feed.id], countdown=120)
+            retry_failed_feeds.apply_async(args=[feed.id], countdown=120) """
 
 
 @shared_task
@@ -59,7 +64,7 @@ def save_feed_items(feed_conetnt, feed) -> bool:
                 new_post.title = item.title
                 new_post.link = item.link
                 new_post.description = item.description
-                if hasattr(item, 'pubDate'):
+                if hasattr(item, "pubDate"):
                     new_post.pubDate = item.pubDate
                 new_post.feed = feed
                 new_post.save()
