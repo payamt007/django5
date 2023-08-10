@@ -8,7 +8,8 @@ from django.conf import settings
 @shared_task
 def read_feed_links() -> None:
     """
-    This is the base background process that is runned by celery beat scheduler to get feeds from sources
+    This is the base background process that is runned by
+    celery beat scheduler to get feeds from sources
     """
     feeds = Feed.objects.filter(stopped=False, followed=True, fails=0)
     for feed in feeds:

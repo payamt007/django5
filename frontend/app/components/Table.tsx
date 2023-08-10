@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Divider, Table, Space, Input } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { DeleteTwoTone, PlusCircleTwoTone } from '@ant-design/icons'
+import { DeleteTwoTone, PlusCircleTwoTone, CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 import { feedType } from '@/lib/types/feeds';
 import { useForm } from 'react-hook-form';
 import { useCreateFeedMutation } from "@/lib/services/feed"
@@ -18,14 +18,17 @@ const columns: ColumnsType<feedType> = [
     {
         title: 'Followed',
         dataIndex: 'followed',
+        render: (followed: boolean) => (followed ? <CheckCircleTwoTone /> : <CloseCircleTwoTone twoToneColor="#eb2f96" />),
     },
     {
         title: 'Stopped',
         dataIndex: 'stopped',
+        render: (followed: boolean) => (followed ? <CheckCircleTwoTone /> : <CloseCircleTwoTone twoToneColor="#eb2f96" />),
     },
     {
         title: 'Fails',
         dataIndex: 'fails',
+        render: (followed: boolean) => (followed ? <CheckCircleTwoTone /> : 0),
     },
 ];
 
