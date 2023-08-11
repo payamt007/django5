@@ -6,10 +6,11 @@ import { feedType } from '@/lib/types/feeds';
 import { useForm } from 'react-hook-form';
 import { useCreateFeedMutation } from "@/lib/services/feed"
 
-const columns: ColumnsType<feedType> = [
+const columns: ColumnsType<feedType | {id: React.Key} > = [
     {
         title: 'Title',
         dataIndex: 'title',
+        
     },
     {
         title: 'Link',
@@ -23,12 +24,12 @@ const columns: ColumnsType<feedType> = [
     {
         title: 'Stopped',
         dataIndex: 'stopped',
-        render: (followed: boolean) => (followed ? <CheckCircleTwoTone /> : <CloseCircleTwoTone twoToneColor="#eb2f96" />),
+        render: (stopped: boolean) => (stopped ? <CheckCircleTwoTone /> : <CloseCircleTwoTone twoToneColor="#eb2f96" />),
     },
     {
         title: 'Fails',
         dataIndex: 'fails',
-        render: (followed: boolean) => (followed ? <CheckCircleTwoTone /> : 0),
+        render: (fails: number) => (fails ? fails : 0),
     },
 ];
 
@@ -46,10 +47,10 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
 
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
         },
-        getCheckboxProps: (record: feedType) => ({
+        /* getCheckboxProps: (record: feedType) => ({
             disabled: record.name === 'Disabled User', // Column configuration not to be checked
             name: record.name,
-        }),
+        }), */
     };
 
     const [deleteButton, setdeleteButton] = useState<boolean>(false);
