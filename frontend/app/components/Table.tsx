@@ -184,6 +184,7 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
         try {
             const row = (await form.validateFields()) as feedType;
             console.log(row,key)
+            setEditingKey('');
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
         }
