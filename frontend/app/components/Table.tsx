@@ -6,9 +6,6 @@ import { feedType } from '@/lib/types/feeds';
 import { useForm } from 'react-hook-form';
 import { useCreateFeedMutation } from "@/lib/services/feed"
 
-const originData: feedType[] = [];
-
-
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
     dataIndex: string;
@@ -47,12 +44,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
                 <Form.Item
                     name={dataIndex}
                     style={{ margin: 0 }}
-                    rules={[
-                        {
-                            required: true,
-                            message: `Please Input ${title}!`,
-                        },
-                    ]}
                 >
                     {inputNode}
                 </Form.Item>
@@ -67,7 +58,7 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
 
     const [createFeed, { isLoading, isError, error }] = useCreateFeedMutation()
     const [form] = Form.useForm();
-    const [data, setData] = useState(originData);
+    const [data, setData] = useState(null);
     const [editingKey, setEditingKey] = useState('');
 
 
@@ -192,31 +183,11 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
 
         try {
             const row = (await form.validateFields()) as feedType;
-
-            const newData = [...data];
-            console.log(newData)
-            const index = newData.findIndex((item) => key === item.id);
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, {
-                    ...item,
-                    ...row,
-                });
-                setData(newData);
-                setEditingKey('');
-            } else {
-                newData.push(row);
-                setData(newData);
-                setEditingKey('');
-            }
+            console.log(row,key)
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
         }
     };
-
-
-
-
 
     return (
         <Form form={form} component={false}>
