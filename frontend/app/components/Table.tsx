@@ -4,7 +4,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { DeleteTwoTone, PlusCircleTwoTone, CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 import { feedType } from '@/lib/types/feeds';
 import { useForm } from 'react-hook-form';
-import { useCreateFeedMutation, useUpdateFeedMutation } from "@/lib/services/feed"
+import { useCreateFeedMutation, useUpdateFeedMutation, useDeleteFeedMutation } from "@/lib/services/feed"
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
@@ -22,9 +22,11 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
 
     const [createFeed, { isLoading, isError, error }] = useCreateFeedMutation()
     const [updateFeed] = useUpdateFeedMutation()
+    const [deleteFeed] = useDeleteFeedMutation()
 
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
+    const [deletingingKey, setDeletingingKey] = useState([]);
 
     const EditableCell: React.FC<EditableCellProps> = ({
         editing,
@@ -50,9 +52,7 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
 
         const handleCheckboxChange = (e) => {
             const { name, checked } = e.target;
-            console.log("name, checked", name, checked)
             form.setFieldsValue({ [name]: checked });
-            //console.log(form)
         };
 
         return (
@@ -141,7 +141,6 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
     ];
 
     const edit = (record: Partial<feedType> & { key: React.Key }) => {
-        console.log("start editing")
         form.setFieldsValue({
             ...record,
             followed: record.followed,
@@ -180,13 +179,13 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
 
     const rowSelection = {
         onChange: (selectedRowKeys: React.Key[], selectedRows: feedType[]) => {
-            console.log(selectedRows.length)
             if (selectedRows.length > 0) {
                 setdeleteButton(true)
             } else if (selectedRows.length == 0)
                 setdeleteButton(false)
 
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            console.log(`selectedRowKeys: ${selectedRowKeys.length}`);
+            setDeletingingKey(selectedRowKeys)
         },
         /* getCheckboxProps: (record: feedType) => ({
             disabled: record.name === 'Disabled User', // Column configuration not to be checked
@@ -197,6 +196,7 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
     const [deleteButton, setdeleteButton] = useState<boolean>(false);
     const handleDeletButtonClick = () => {
         console.log("clicked")
+        console.log(deletingingKey)
     }
     const handleAddFeed = async (data) => {
         await createFeed(data)
@@ -209,16 +209,13 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
         setEditingKey('');
     };
 
-    const save = async (key: React.Key) => {
+    const save = async (key: number) => {
 
         try {
             //console.log(form)
             const row = (await form.getFieldsValue()) as feedType;
             //form.getFieldsValue
-            let updatePaylod = row
-            updatePaylod.id = key
-            console.log(updatePaylod)
-            await updateFeed(row)
+            await updateFeed({ id: key, body: row })
             setEditingKey('');
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);

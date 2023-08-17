@@ -48,13 +48,51 @@ export const feedsApi = createApi({
         }
       ) { },
     }),
-    updateFeed: build.mutation<void, Pick<feedType, 'title' | 'link' | 'id' | 'followed' | 'stopped'>>({
-      // note: an optional `queryFn` may be used in place of `query`
-      query: ({ ...body }) => ({
-        url: `feeds/${body.id}`,
-        method: 'PATCH',
-        body: body,
-      }),
+    updateFeed: build.mutation<void, { id: number; body: Partial<feedType> }>({
+      query: ({ id, body }) => {
+        return {
+          url: `feeds/${id}`,
+          method: 'PATCH',
+          body: body,
+        }
+      },
+      // Pick out data and prevent nested properties in a hook or selector
+      transformResponse: (response: { data: void }, meta, arg) => response.data,
+      // Pick out errors and prevent nested properties in a hook or selector
+      transformErrorResponse: (
+        response: { status: string | number },
+        meta,
+        arg
+      ) => response.status,
+      invalidatesTags: ['Feeds'],
+      // onQueryStarted is useful for optimistic updates
+      // The 2nd parameter is the destructured `MutationLifecycleApi`
+      async onQueryStarted(
+        arg,
+        { dispatch, getState, queryFulfilled, requestId, extra, getCacheEntry }
+      ) { },
+      // The 2nd parameter is the destructured `MutationCacheLifecycleApi`
+      async onCacheEntryAdded(
+        arg,
+        {
+          dispatch,
+          getState,
+          extra,
+          requestId,
+          cacheEntryRemoved,
+          cacheDataLoaded,
+          getCacheEntry,
+        }
+      ) { },
+    }),
+    deleteFeed: build.mutation<void, { keys: (string | number)[] }>({
+      query: (keys) => {
+        return {
+          url: 'feeds',
+          method: 'DELETE',
+          body: keys,
+        }
+      },
       // Pick out data and prevent nested properties in a hook or selector
       transformResponse: (response: { data: void }, meta, arg) => response.data,
       // Pick out errors and prevent nested properties in a hook or selector
@@ -93,4 +131,5 @@ export const feedsApi = createApi({
 export const {
   useGetAllFeedsQuery,
   useCreateFeedMutation,
-  useUpdateFeedMutation } = feedsApi
+  useUpdateFeedMutation,
+  useDeleteFeedMutation } = feedsApi
