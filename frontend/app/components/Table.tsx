@@ -4,7 +4,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { DeleteTwoTone, PlusCircleTwoTone, CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 import { feedType } from '@/lib/types/feeds';
 import { useForm } from 'react-hook-form';
-import { useCreateFeedMutation } from "@/lib/services/feed"
+import { useCreateFeedMutation, useUpdateFeedMutation } from "@/lib/services/feed"
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
@@ -21,6 +21,8 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
 const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
 
     const [createFeed, { isLoading, isError, error }] = useCreateFeedMutation()
+    const [updateFeed] = useUpdateFeedMutation()
+
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
 
@@ -80,6 +82,12 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
     };
 
     const columns = [
+        {
+            title: 'ID',
+            dataIndex: 'id',
+            editable: false,
+
+        },
         {
             title: 'Title',
             dataIndex: 'title',
@@ -207,7 +215,10 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
             //console.log(form)
             const row = (await form.getFieldsValue()) as feedType;
             //form.getFieldsValue
-            console.log(row, key)
+            let updatePaylod = row
+            updatePaylod.id = key
+            console.log(updatePaylod)
+            await updateFeed(row)
             setEditingKey('');
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
