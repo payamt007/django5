@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Divider, Table, Space, Input, InputNumber, Form, Typography, Popconfirm, Checkbox } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import { DeleteTwoTone, PlusCircleTwoTone, CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 import { feedType } from '@/lib/types/feeds';
 import { useForm } from 'react-hook-form';
@@ -26,7 +25,8 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
 
     const [form] = Form.useForm();
     const [editingKey, setEditingKey] = useState('');
-    const [deletingingKey, setDeletingingKey] = useState([]);
+    const initialDeletKeys: React.Key[] = [];
+    const [deletingingKey, setDeletingingKey] = useState(initialDeletKeys);
 
     const EditableCell: React.FC<EditableCellProps> = ({
         editing,
@@ -194,9 +194,10 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
     };
 
     const [deleteButton, setdeleteButton] = useState<boolean>(false);
-    const handleDeletButtonClick = () => {
+    const handleDeletButtonClick = async () => {
         console.log("clicked")
         console.log(deletingingKey)
+        await deleteFeed({ keys: deletingingKey })
     }
     const handleAddFeed = async (data) => {
         await createFeed(data)

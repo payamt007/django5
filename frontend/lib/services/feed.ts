@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { paginatedFeedType } from '../types/paginated'
 import { feedType } from '../types/feeds'
+import React from 'react';
 
 // Define a service using a base URL and expected endpoints
 export const feedsApi = createApi({
@@ -51,7 +52,7 @@ export const feedsApi = createApi({
     updateFeed: build.mutation<void, { id: number; body: Partial<feedType> }>({
       query: ({ id, body }) => {
         return {
-          url: `feeds/${id}`,
+          url: `feeds/${id}/`,
           method: 'PATCH',
           body: body,
         }
@@ -85,16 +86,16 @@ export const feedsApi = createApi({
         }
       ) { },
     }),
-    deleteFeed: build.mutation<void, { keys: (string | number)[] }>({
+    deleteFeed: build.mutation<void, { keys: React.Key[] }>({
       query: (keys) => {
         return {
-          url: 'feeds',
+          url: 'delete-feeds',
           method: 'DELETE',
           body: keys,
         }
       },
       // Pick out data and prevent nested properties in a hook or selector
-      transformResponse: (response: { data: void }, meta, arg) => response.data,
+      //transformResponse: (response: { data: void }, meta, arg) => response.data,
       // Pick out errors and prevent nested properties in a hook or selector
       transformErrorResponse: (
         response: { status: string | number },

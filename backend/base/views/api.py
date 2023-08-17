@@ -5,6 +5,7 @@ from base.models import Post, Feed
 from base.serializers import (
     PostSerializer,
     FeedSerializer,
+    FeedDeleteSerializer,
     FilterSerializer,
     ForceRefreshSerializer,
     UpdatePostSerializer,
@@ -53,6 +54,23 @@ class FeedViewSet(
     )
     def update(self, request, *args, **kwargs) -> Response:
         return super().update(request, *args, **kwargs)
+
+
+class DeleteFeedAPIView(APIView):
+    """
+    APIView for deleting the feeds
+    """
+
+    allowed_methods = ["delete"]
+    serializer_class = FeedDeleteSerializer
+
+    @extend_schema(parameters=[FeedDeleteSerializer])
+    def delete(self, request):
+        serializer = FeedDeleteSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        ids = serializer.validated_data['keys']
+        Feed.objects.filter(id__in=ids).delete()
+        return Response(status=status.HTTP_200_OK)
 
 
 class PostFilterAPIView(APIView):

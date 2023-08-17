@@ -36,6 +36,10 @@ class FeedSerializer(serializers.ModelSerializer[Feed]):
         )
 
 
+class FeedDeleteSerializer(serializers.Serializer):
+    keys = serializers.ListField()
+
+
 class ForceRefreshSerializer(serializers.Serializer[str]):
     id = serializers.IntegerField()
 
