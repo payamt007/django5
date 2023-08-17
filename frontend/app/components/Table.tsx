@@ -16,51 +16,68 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     children: React.ReactNode;
 }
 
-const EditableCell: React.FC<EditableCellProps> = ({
-    editing,
-    dataIndex,
-    title,
-    inputType,
-    record,
-    index,
-    children,
-    ...restProps
-}) => {
-    //const inputNode = inputType === 'checkbox' ? <Checkbox /> : <Input />;
-    const inputNodeCalculator = (inputType: string) => {
-        if (inputType === 'checkbox')
-            return <Checkbox />
-        else if (inputType === 'number')
-            return <InputNumber />
-        else
-            return <Input />
-    }
-    const inputNode = inputNodeCalculator(inputType)
 
-
-    return (
-        <td {...restProps}>
-            {editing ? (
-                <Form.Item
-                    name={dataIndex}
-                    style={{ margin: 0 }}
-                >
-                    {inputNode}
-                </Form.Item>
-            ) : (
-                children
-            )}
-        </td>
-    );
-};
 
 const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
 
     const [createFeed, { isLoading, isError, error }] = useCreateFeedMutation()
     const [form] = Form.useForm();
-    const [data, setData] = useState(null);
     const [editingKey, setEditingKey] = useState('');
 
+    const EditableCell: React.FC<EditableCellProps> = ({
+        editing,
+        dataIndex,
+        title,
+        inputType,
+        record,
+        index,
+        children,
+        ...restProps
+    }) => {
+        //const inputNode = inputType === 'checkbox' ? <Checkbox /> : <Input />;
+        const inputNodeCalculator = (inputType: string) => {
+            if (inputType === 'checkbox') {
+                return <Checkbox checked={form.getFieldValue(dataIndex)} />
+            }
+            else if (inputType === 'number')
+                return <InputNumber />
+            else
+                return <Input />
+        }
+        const inputNode = inputNodeCalculator(inputType)
+
+        const handleCheckboxChange = (e) => {
+            const { name, checked } = e.target;
+            console.log("name, checked", name, checked)
+            form.setFieldsValue({ [name]: checked });
+            //console.log(form)
+        };
+
+        return (
+            <td {...restProps}>
+                {editing ? (
+                    <Form.Item
+                        name={dataIndex}
+                        style={{ margin: 0 }}
+                        trigger="onChange"
+                    >
+                        {inputType === 'checkbox' ? (
+                            <Checkbox
+                                name={dataIndex}
+                                //checked={record[dataIndex]}
+                                checked={form.getFieldValue(dataIndex)}
+                                onChange={handleCheckboxChange}
+                            />
+                        ) : (
+                            inputNode
+                        )}
+                    </Form.Item>
+                ) : (
+                    children
+                )}
+            </td>
+        );
+    };
 
     const columns = [
         {
@@ -116,7 +133,12 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
     ];
 
     const edit = (record: Partial<feedType> & { key: React.Key }) => {
-        form.setFieldsValue({ ...record });
+        console.log("start editing")
+        form.setFieldsValue({
+            ...record,
+            followed: record.followed,
+            stopped: record.stopped,
+        });
         setEditingKey(record.key);
     };
 
@@ -182,8 +204,10 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
     const save = async (key: React.Key) => {
 
         try {
-            const row = (await form.validateFields()) as feedType;
-            console.log(row,key)
+            //console.log(form)
+            const row = (await form.getFieldsValue()) as feedType;
+            //form.getFieldsValue
+            console.log(row, key)
             setEditingKey('');
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);

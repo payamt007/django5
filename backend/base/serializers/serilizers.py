@@ -18,12 +18,11 @@ class PostSerializer(serializers.ModelSerializer[Post]):
 
 
 class FeedSerializer(serializers.ModelSerializer[Feed]):
-
     key = serializers.SerializerMethodField()
 
     def get_key(self, obj):
         return obj.id
-    
+
     class Meta:
         model = Feed
         fields = (
@@ -32,6 +31,8 @@ class FeedSerializer(serializers.ModelSerializer[Feed]):
             "title",
             "link",
             "followed",
+            "stopped",
+            "fails",
         )
 
 
