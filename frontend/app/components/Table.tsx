@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Divider, Table, Space, Input, InputNumber, Form, Typography, Popconfirm, Checkbox } from 'antd';
-import { DeleteTwoTone, PlusCircleTwoTone, CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
+import { Divider, Table, Input, InputNumber, Form, Typography, Popconfirm, Checkbox } from 'antd';
+import { DeleteTwoTone, CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 import { feedType } from '@/lib/types/feeds';
 import { useForm } from 'react-hook-form';
 import { useCreateFeedMutation, useUpdateFeedMutation, useDeleteFeedMutation } from "@/lib/services/feed"
+import { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
@@ -50,9 +51,10 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
         }
         const inputNode = inputNodeCalculator(inputType)
 
-        const handleCheckboxChange = (e) => {
+        const handleCheckboxChange = (e: CheckboxChangeEvent) => {
             const { name, checked } = e.target;
-            form.setFieldsValue({ [name]: checked });
+            const known_name = name as string
+            form.setFieldsValue({ [known_name]: checked });
         };
 
         return (
@@ -183,8 +185,6 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
                 setdeleteButton(true)
             } else if (selectedRows.length == 0)
                 setdeleteButton(false)
-
-            console.log(`selectedRowKeys: ${selectedRowKeys.length}`);
             setDeletingingKey(selectedRowKeys)
         },
         /* getCheckboxProps: (record: feedType) => ({
@@ -195,13 +195,11 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
 
     const [deleteButton, setdeleteButton] = useState<boolean>(false);
     const handleDeletButtonClick = async () => {
-        console.log("clicked")
-        console.log(deletingingKey)
         await deleteFeed({ keys: deletingingKey })
     }
-    const handleAddFeed = async (data) => {
-        await createFeed(data)
-        console.log(data)
+    const handleAddFeed = async (e: any) => {
+        console.log("E :", e)
+        await createFeed(e)
     }
 
     const { register, handleSubmit, formState: { errors }, } = useForm();
@@ -213,9 +211,7 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
     const save = async (key: number) => {
 
         try {
-            //console.log(form)
             const row = (await form.getFieldsValue()) as feedType;
-            //form.getFieldsValue
             await updateFeed({ id: key, body: row })
             setEditingKey('');
         } catch (errInfo) {
@@ -240,9 +236,6 @@ const Datatable: React.FC<{ dataSource: feedType[] }> = ({ dataSource }) => {
                     columns={mergedColumns}
                     dataSource={dataSource}
                 />
-                <div>
-                    <PlusCircleTwoTone onClick={handleAddFeed} style={{ fontSize: '150%' }} />
-                </div>
                 <form onSubmit={handleSubmit(handleAddFeed)}>
                     <input {...register('title', { required: true })} />
                     {errors.title && <p>Title is required.</p>}
