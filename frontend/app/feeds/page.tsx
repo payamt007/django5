@@ -33,6 +33,6 @@ export default function Page() {
 
 }
 
-export const metadata = {
+/* export const metadata = {
   title: 'Feeds page',
-}
+} */
