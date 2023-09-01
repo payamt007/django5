@@ -9,12 +9,12 @@ export default function RootLayout({ children, }: { children: React.ReactNode })
     <Providers>
       <html lang="en">
         <body>
-          <StyledComponentsRegistry>
+          {/* <StyledComponentsRegistry> */}
             <Row>
               <Col span={6}><MainMenu /></Col>
               <Col span={18}>{children}</Col>
             </Row>
-          </StyledComponentsRegistry>
+          {/* </StyledComponentsRegistry> */}
         </body>
       </html>
     </Providers>
