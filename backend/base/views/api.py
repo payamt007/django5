@@ -14,6 +14,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
+from django.shortcuts import render
 
 
 class PostViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
@@ -68,7 +69,7 @@ class DeleteFeedAPIView(APIView):
     def delete(self, request):
         serializer = FeedDeleteSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        ids = serializer.validated_data['keys']
+        ids = serializer.validated_data["keys"]
         Feed.objects.filter(id__in=ids).delete()
         return Response(status=status.HTTP_200_OK)
 
@@ -139,3 +140,7 @@ class ForceRefreshAPIview(APIView):
                 data={"message": "Feed refresh Faild! Sorry!"},
                 status=status.HTTP_406_NOT_ACCEPTABLE,
             )
+
+
+def main_page(request):
+    return render(request, "base/index.html")

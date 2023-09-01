@@ -2,11 +2,11 @@ version: "3.9"
 
 services:
   redis:
-    image: redis:7
+    image: redis:7.2
     ports:
       - 6379:6379
   db:
-    image: postgres:15.2
+    image: postgres:15.4
     env_file:
       - ./backend/.env
     ports:
@@ -46,3 +46,7 @@ services:
       - 7000:7000
     depends_on:
       - api
+  frontend:
+    build: ./frontend
+    ports:
+      - 3000:3000
