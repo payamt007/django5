@@ -44,7 +44,7 @@ const items: MenuItem[] = [
   
 ];
 
-const App: React.FC = () => {
+const MainMenu: React.FC = () => {
   return (
     <>
       <Divider type="vertical" />
@@ -60,4 +60,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default MainMenu;
