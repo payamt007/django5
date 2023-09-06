@@ -1,5 +1,8 @@
 #!/bin/bash
-/bin/sh -c "cd /usr/src/app"
+cd /usr/src/app/backend
+$SHELL
+#/bin/sh -c "pwd"
+#/bin/sh -c "ls -l"
 /bin/sh -c "until nc -z db 5432; do sleep 1; done"
 /bin/sh -c "python manage.py migrate"
 /bin/sh -c "python manage.py createsuperuser --noinput --username chelen --email zelen@gmail.com"

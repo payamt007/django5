@@ -12,9 +12,7 @@ services:
     ports:
       - 5432:5432
   api:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    build: ./backend
     ports:
       - 8000:8000
     env_file:
