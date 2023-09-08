@@ -15,6 +15,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 from django.shortcuts import render
+from rest_framework.permissions import IsAuthenticated
 
 
 class PostViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
@@ -41,17 +42,25 @@ class FeedViewSet(
 
     queryset = Feed.objects.all()
     serializer_class = FeedSerializer
+    permission_classes = [IsAuthenticated]
 
     @extend_schema(description="Insert a new Feed")
     def create(self, request, *args, **kwargs) -> Response:
         return super().create(request, *args, **kwargs)
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
     @extend_schema(description="Retrieve a list of Feeds")
     def list(self, request, *args, **kwargs) -> Response:
         return super().list(request, *args, **kwargs)
 
+    def get_queryset(self):
+        return Feed.objects.filter(user=self.request.user)
+
     @extend_schema(
-        description="Update a Feed , followed to true or false , Or maybe change title or url"
+        description="""Update a Feed , followed to true or false 
+                        , Or maybe change title or url"""
     )
     def update(self, request, *args, **kwargs) -> Response:
         return super().update(request, *args, **kwargs)
@@ -64,6 +73,7 @@ class DeleteFeedAPIView(APIView):
 
     allowed_methods = ["delete"]
     serializer_class = FeedDeleteSerializer
+    permission_classes = [IsAuthenticated]
 
     @extend_schema(parameters=[FeedDeleteSerializer])
     def delete(self, request):
@@ -81,6 +91,7 @@ class PostFilterAPIView(APIView):
 
     allowed_methods = ["get"]
     serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
 
     @extend_schema(parameters=[FilterSerializer])
     def get(self, request):
@@ -104,6 +115,7 @@ class ForceRefreshAPIview(APIView):
     """
 
     allowed_methods = ["post"]
+    permission_classes = [IsAuthenticated]
 
     @extend_schema(request=ForceRefreshSerializer)
     def post(self, request) -> Response:

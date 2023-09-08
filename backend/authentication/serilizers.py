@@ -9,3 +9,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             "username",
             "password",
         )
+
+
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
