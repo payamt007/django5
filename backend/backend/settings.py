@@ -40,8 +40,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "base",
+    "authentication",
     "drf_spectacular",
     "corsheaders",
+    "rest_framework.authtoken",
     # 'django_celery_beat',
 ]
 
