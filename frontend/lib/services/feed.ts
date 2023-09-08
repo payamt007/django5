@@ -1,22 +1,30 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { paginatedFeedType } from '../types/paginated'
 import { feedType } from '../types/feeds'
+import { loginTokenType } from '../types/token';
 import React from 'react';
 
 // Define a service using a base URL and expected endpoints
 export const feedsApi = createApi({
   reducerPath: 'feedApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://127.0.0.1:8000/api' }),
-  tagTypes: ['Feeds'],
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://127.0.0.1:8000/' }),
+  tagTypes: ['Feeds', 'login'],
   endpoints: (build) => ({
+    login: build.mutation<loginTokenType, { username: string, password: string }>({
+      query: ({ username, password }) => ({
+        url: `auth/token/`,
+        method: 'POST',
+        body: { username, password },
+      }),
+    }),
     getAllFeeds: build.query<paginatedFeedType, void>({
-      query: () => `feeds`,
+      query: () => 'api/feeds',
       providesTags: ['Feeds'],
     }),
     createFeed: build.mutation<void, Pick<feedType, 'title' | 'link'>>({
       // note: an optional `queryFn` may be used in place of `query`
       query: ({ ...body }) => ({
-        url: `feeds/`,
+        url: 'api/feeds/',
         method: 'POST',
         body: body,
       }),
@@ -52,7 +60,7 @@ export const feedsApi = createApi({
     updateFeed: build.mutation<void, { id: number; body: Partial<feedType> }>({
       query: ({ id, body }) => {
         return {
-          url: `feeds/${id}/`,
+          url: `api/feeds/${id}/`,
           method: 'PATCH',
           body: body,
         }
@@ -89,7 +97,7 @@ export const feedsApi = createApi({
     deleteFeed: build.mutation<void, { keys: React.Key[] }>({
       query: (keys) => {
         return {
-          url: 'delete-feeds',
+          url: 'api/delete-feeds',
           method: 'DELETE',
           body: keys,
         }
@@ -130,6 +138,7 @@ export const feedsApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
+  useLoginMutation,
   useGetAllFeedsQuery,
   useCreateFeedMutation,
   useUpdateFeedMutation,
