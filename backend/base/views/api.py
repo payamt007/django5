@@ -59,7 +59,7 @@ class FeedViewSet(
         return Feed.objects.filter(user=self.request.user)
 
     @extend_schema(
-        description="""Update a Feed , followed to true or false 
+        description="""Update a Feed , followed to true or false
                         , Or maybe change title or url"""
     )
     def update(self, request, *args, **kwargs) -> Response:

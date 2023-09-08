@@ -1,10 +1,8 @@
 from rest_framework.views import APIView
-from .serilizers import UserRegistrationSerializer, UserLoginSerializer
+from .serilizers import UserRegistrationSerializer
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
 from drf_spectacular.utils import extend_schema
 
 
