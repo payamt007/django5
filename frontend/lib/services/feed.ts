@@ -16,6 +16,7 @@ export const feedsApi = createApi({
         method: 'POST',
         body: { username, password },
       }),
+      transformResponse: (response: loginTokenType, meta, arg) => response.access as loginTokenType
     }),
     getAllFeeds: build.query<paginatedFeedType, void>({
       query: () => 'api/feeds',

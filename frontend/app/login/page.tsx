@@ -15,8 +15,8 @@ export default function LoginPage() {
   const { register, handleSubmit, formState: { errors }, } = useForm();
 
   const handleLogin = async (e: any) => {
-    console.log("E :", e)
-    await login({ username: e.username, password: e.password })
+    let data = await login({ username: e.username, password: e.password })
+    console.log("data : ", data)
   }
 
   return (
