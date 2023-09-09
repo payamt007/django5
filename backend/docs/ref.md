@@ -10,17 +10,17 @@
 
 ---
 
-::: api.views.PostViewSet
+::: base.views.api.PostViewSet
 
 ---
 
-::: api.views.FeedViewSet
+::: base.views.api.FeedViewSet
 
 ---
 
-::: api.views.PostFilterAPIView
+::: base.views.api.PostFilterAPIView
 
 ---
 
-::: api.views.ForceRefreshAPIview
+::: base.views.api.ForceRefreshAPIview
 
