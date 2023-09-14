@@ -1,3 +1,5 @@
+import json
+
 from rest_framework.views import APIView
 from .serilizers import UserRegistrationSerializer, UserLoginSerializer
 from django.contrib.auth.models import User
@@ -8,6 +10,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, login
 from datetime import datetime, timedelta, timezone
+import jwt
+from django.conf import settings
 
 
 class UserRegistrationAPIView(APIView):
@@ -41,10 +45,14 @@ class TokenGeneratorVIew(APIView):
         # user = authenticate(username=username, password=password)
         user = User.objects.filter(username=username).first()
         if user and user.check_password(password):
-            # login(request, user)
-            refresh = RefreshToken.for_user(user)
+            jwt_token = (jwt.encode({
+                "username": user.username,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "id": user.id
+            }, settings.SECRET_KEY, algorithm="HS256"))
             response = Response(status=status.HTTP_200_OK)
-            response.set_cookie(key='jwt_token', value=str(refresh.access_token),
+            response.set_cookie(key='jwt_token', value=str(jwt_token),
                                 expires=datetime.now(timezone.utc) + timedelta(days=1),
                                 httponly=False)
             return response

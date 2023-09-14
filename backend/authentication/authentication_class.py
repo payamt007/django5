@@ -9,15 +9,15 @@ import json
 
 class CookieAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
-        jwt_token = request.COOKIES.get("auth", None)
+        jwt_token = request.COOKIES.get("jwt_token", None)
         if jwt_token:
             user = (jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=["HS256"]))
-            user_object = User(**json.loads(user))
+            user_object = User(**user)
             if not user_object:
                 return None
             # try:
             #     user = User.objects.get(username=username)
             # except User.DoesNotExist:
             #     raise exceptions.AuthenticationFailed('No such user')
-            return user, None
+            return user_object, None
         return None

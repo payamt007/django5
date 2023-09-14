@@ -19,7 +19,6 @@ from rest_framework.permissions import IsAuthenticated
 
 
 class PostViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
-
     """
     Viewset for handling updating (reading, following) posts
     """
@@ -34,7 +33,6 @@ class FeedViewSet(
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
-
     """
     Viewset for handling creating, listing and
     updating (unfollowing, following) rss feeds
@@ -42,7 +40,8 @@ class FeedViewSet(
 
     queryset = Feed.objects.all()
     serializer_class = FeedSerializer
-    permission_classes = [IsAuthenticated]
+
+    # permission_classes = [IsAuthenticated]
 
     @extend_schema(description="Insert a new Feed")
     def create(self, request, *args, **kwargs) -> Response:
@@ -56,7 +55,8 @@ class FeedViewSet(
         return super().list(request, *args, **kwargs)
 
     def get_queryset(self):
-        return Feed.objects.filter(user=self.request.user)
+        # return Feed.objects.filter(user=self.request.user)
+        return Feed.objects.all()
 
     @extend_schema(
         description="""Update a Feed , followed to true or false
@@ -109,7 +109,6 @@ class PostFilterAPIView(APIView):
 
 
 class ForceRefreshAPIview(APIView):
-
     """
     APIView for refreshing status of failed feeds
     """
