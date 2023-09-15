@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, login
 from datetime import datetime, timedelta, timezone
 import jwt
 from django.conf import settings
+from drf_spectacular.utils import extend_schema
 
 
 class UserRegistrationAPIView(APIView):
@@ -20,7 +21,7 @@ class UserRegistrationAPIView(APIView):
     """
 
     @extend_schema(
-        request=UserRegistrationSerializer, description="Register a new user"
+        request=UserRegistrationSerializer, summary="Register a new user"
     )
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
@@ -36,13 +37,18 @@ class UserRegistrationAPIView(APIView):
 
 class TokenGeneratorVIew(APIView):
 
+    @extend_schema(summary="Logout a user")
+    def get(self, request):
+        response = Response(status=status.HTTP_200_OK)
+        response.delete_cookie(key='jwt_token')
+        return response
+
+    @extend_schema(summary="Login a user")
     def post(self, request):
-        print("here")
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data["username"]
         password = serializer.validated_data["password"]
-        # user = authenticate(username=username, password=password)
         user = User.objects.filter(username=username).first()
         if user and user.check_password(password):
             jwt_token = (jwt.encode({
@@ -54,6 +60,6 @@ class TokenGeneratorVIew(APIView):
             response = Response(status=status.HTTP_200_OK)
             response.set_cookie(key='jwt_token', value=str(jwt_token),
                                 expires=datetime.now(timezone.utc) + timedelta(days=1),
-                                httponly=False)
+                                httponly=True)
             return response
         return Response(status=status.HTTP_403_FORBIDDEN)

@@ -122,8 +122,8 @@ class ForceRefreshAPIview(APIView):
         feed = Feed.objects.get(id=id)
 
         try:
-            feed_conetnt = feedparser.parse(feed.link)
-            for item in feed_conetnt.entries:
+            feed_content = feedparser.parse(feed.link)
+            for item in feed_content.entries:
                 old_post = Post.objects.filter(link=item.link).first()
                 if not old_post:
                     new_post = Post()
