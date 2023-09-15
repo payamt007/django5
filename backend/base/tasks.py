@@ -14,7 +14,7 @@ def read_feed_links() -> None:
     feeds = Feed.objects.filter(stopped=False, followed=True, fails=0)
     logger.info(f'Feed paring task start for {feeds}')
     for feed in feeds:
-        parse_feed_item.apply_async(args=[feed.link, feed.id])
+        parse_feed_item.apply_async(args=[feed.id])
 
 
 @shared_task
@@ -43,20 +43,20 @@ def retry_failed_feed(id: int) -> None:
 
 
 @shared_task
-def parse_feed_item(feed_link: str, feed_id: int):
+def parse_feed_item(feed_id: int):
+    feed = Feed.objects.get(id=feed_id)
     try:
-        feed_content = feedparser.parse(feed_link)
+        feed_content = feedparser.parse(feed.link)
         last_feed_update_time = cache.get(f"last_feed_update_time_{feed_id}", None)
         if hasattr(feed_content.feed, "updated") and last_feed_update_time == str(feed_content.feed.updated):
             return
         else:
             for item in feed_content.entries:
-                save_post(item, feed_id)
+                save_post(item, feed)
             if hasattr(feed_content.feed, "updated"):
                 cache.set(f"last_feed_update_time_{feed_id}", feed_content.feed.updated)
     except Exception as e:
         logger.error(f"Failed paring {feed_link} --> {e}")
-        feed = Feed.objects.get(id=id)
         feed.fails = feed.fails + 1
         feed.save()
         retry_failed_feed.apply_async(args=[feed_id], countdown=120)
