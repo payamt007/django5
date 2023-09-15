@@ -40,8 +40,7 @@ class FeedViewSet(
 
     queryset = Feed.objects.all()
     serializer_class = FeedSerializer
-
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     @extend_schema(description="Insert a new Feed")
     def create(self, request, *args, **kwargs) -> Response:
@@ -55,8 +54,7 @@ class FeedViewSet(
         return super().list(request, *args, **kwargs)
 
     def get_queryset(self):
-        # return Feed.objects.filter(user=self.request.user)
-        return Feed.objects.all()
+        return Feed.objects.filter(user=self.request.user)
 
     @extend_schema(
         description="""Update a Feed , followed to true or false

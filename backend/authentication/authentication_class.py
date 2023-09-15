@@ -1,10 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import authentication
-from rest_framework import exceptions
-from rest_framework_simplejwt.tokens import Token
 import jwt
 from django.conf import settings
-import json
 
 
 class CookieAuthentication(authentication.BaseAuthentication):
@@ -15,9 +12,5 @@ class CookieAuthentication(authentication.BaseAuthentication):
             user_object = User(**user)
             if not user_object:
                 return None
-            # try:
-            #     user = User.objects.get(username=username)
-            # except User.DoesNotExist:
-            #     raise exceptions.AuthenticationFailed('No such user')
             return user_object, None
         return None
