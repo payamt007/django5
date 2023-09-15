@@ -5,10 +5,6 @@ from .serilizers import UserRegistrationSerializer, UserLoginSerializer
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate, login
 from datetime import datetime, timedelta, timezone
 import jwt
 from django.conf import settings
@@ -43,7 +39,7 @@ class TokenGeneratorVIew(APIView):
         response.delete_cookie(key='jwt_token')
         return response
 
-    @extend_schema(summary="Login a user")
+    @extend_schema(request=UserLoginSerializer, summary="Login a user")
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

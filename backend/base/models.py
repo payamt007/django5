@@ -12,7 +12,6 @@ class Feed(models.Model):
 
 
 class Post(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     feed = models.ForeignKey(Feed, on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=200, null=True, blank=True)
     link = models.CharField(max_length=200, null=True, blank=True)

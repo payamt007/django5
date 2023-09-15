@@ -6,9 +6,7 @@ from base.views import (
     PostViewSet,
     FeedViewSet,
     DeleteFeedAPIView,
-    main_page,
 )
-from django.urls import re_path
 
 router = routers.DefaultRouter()
 router.register(r"posts", PostViewSet)
@@ -19,6 +17,4 @@ urlpatterns = [
     path("force-refresh-feed", ForceRefreshAPIview.as_view()),
     path("filter-posts", PostFilterAPIView.as_view()),
     path("delete-feeds", DeleteFeedAPIView.as_view()),
-    # path("ad", main_page),
-    re_path("ad.*", main_page),
 ]

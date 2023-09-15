@@ -14,8 +14,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
-from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
+from helper import create_post
 
 
 class PostViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
@@ -126,15 +126,7 @@ class ForceRefreshAPIview(APIView):
             for item in feed_content.entries:
                 old_post = Post.objects.filter(link=item.link).first()
                 if not old_post:
-                    new_post = Post()
-                    new_post.title = item.title
-                    new_post.link = item.link
-                    new_post.description = item.description
-                    if hasattr(item, "pubDate"):
-                        new_post.pubDate = item.pubDate
-                    new_post.feed = feed
-                    new_post.save()
-
+                    create_post(item, feed)
             feed.fails = 0
             feed.stopped = False
             feed.save()
@@ -146,10 +138,6 @@ class ForceRefreshAPIview(APIView):
             )
         except Exception:
             return Response(
-                data={"message": "Feed refresh Faild! Sorry!"},
+                data={"message": "Feed refresh Failed! Sorry!"},
                 status=status.HTTP_406_NOT_ACCEPTABLE,
             )
-
-
-def main_page(request):
-    return render(request, "base/index.html")
