@@ -156,7 +156,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Feed Parser API Docs",
-    "DESCRIPTION": "A Feed parsing systemposwerd by Django and Celery",
+    "DESCRIPTION": "A Feed parsing system powered by Django and Celery",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
@@ -170,3 +170,5 @@ CORS_ALLOW_METHODS = ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"]
 CORS_ALLOW_HEADERS = "*"
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True

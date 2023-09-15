@@ -15,7 +15,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import IsAuthenticated
-from helper import create_post
+from helper import save_post
 
 
 class PostViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
@@ -126,7 +126,7 @@ class ForceRefreshAPIview(APIView):
             for item in feed_content.entries:
                 old_post = Post.objects.filter(link=item.link).first()
                 if not old_post:
-                    create_post(item, feed)
+                    save_post(item, feed)
             feed.fails = 0
             feed.stopped = False
             feed.save()
