@@ -17,6 +17,22 @@ class PostSerializer(serializers.ModelSerializer[Post]):
         fields = "__all__"
 
 
+class CreateOrUpdateFeedSerializer(serializers.ModelSerializer[Feed]):
+    key = serializers.SerializerMethodField()
+
+    def get_key(self, obj):
+        return obj.id
+
+    class Meta:
+        model = Feed
+        fields = (
+            "id",
+            "key",
+            "title",
+            "link",
+        )
+
+
 class FeedSerializer(serializers.ModelSerializer[Feed]):
     key = serializers.SerializerMethodField()
 
@@ -32,7 +48,6 @@ class FeedSerializer(serializers.ModelSerializer[Feed]):
             "link",
             "followed",
             "stopped",
-            "fails",
         )
 
 

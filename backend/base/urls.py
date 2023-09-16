@@ -5,7 +5,6 @@ from base.views import (
     PostFilterAPIView,
     PostViewSet,
     FeedViewSet,
-    DeleteFeedAPIView,
 )
 
 router = routers.DefaultRouter()
@@ -16,5 +15,4 @@ urlpatterns = [
     path("", include(router.urls)),
     path("force-refresh-feed", ForceRefreshAPIview.as_view()),
     path("filter-posts", PostFilterAPIView.as_view()),
-    path("delete-feeds", DeleteFeedAPIView.as_view()),
 ]
