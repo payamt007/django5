@@ -5,19 +5,23 @@ import {Card, Form, Input, Button} from 'antd';
 import {Row, Col} from 'antd';
 import {useLoginMutation} from "@/lib/services/feed"
 import {useForm} from 'react-hook-form';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+import {FetchBaseQueryError} from '@reduxjs/toolkit/query'
+import {redirect, useRouter} from 'next/navigation'
 
 export default function LoginPage() {
 
     const [login, {isLoading, isError, error}] = useLoginMutation()
     const {register, handleSubmit, formState: {errors},} = useForm();
-
+    const router = useRouter()
     const handleLogin = async (e: any) => {
         await login({username: e.username, password: e.password})
         console.log("isError : ", isError)
         console.log("error : ", error)
         if (isError && error as number == 403) {
             console.log("Error in Login")
+        } else {
+            router.push('/feeds')
+            //redirect('/feeds')
         }
     }
 
