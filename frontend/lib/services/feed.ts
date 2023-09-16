@@ -1,7 +1,7 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {paginatedFeedType} from '../types/paginated'
 import {feedType} from '../types/feeds'
-import {loginTokenType} from '../types/token';
+import {generalResponseType, loginTokenType} from '../types/login';
 import React from 'react';
 
 // Define a service using a base URL and expected endpoints
@@ -10,14 +10,21 @@ export const feedsApi = createApi({
     baseQuery: fetchBaseQuery({baseUrl: 'http://127.0.0.1:8000/'}),
     tagTypes: ['Feeds', 'login'],
     endpoints: (build) => ({
-        login: build.mutation<loginTokenType, { username: string, password: string }>({
+        login: build.mutation<generalResponseType, { username: string, password: string }>({
             query: ({username, password}) => ({
                 url: `auth/token/`,
                 method: 'POST',
                 body: {username, password},
             }),
-            transformResponse: (response: loginTokenType, meta,
-                                arg) => response.access as loginTokenType
+            // transformResponse: (response: loginTokenType, meta,
+            //                     arg) => response.access as loginTokenType,
+            transformResponse: (response: generalResponseType, meta,
+                                arg) => response,
+            transformErrorResponse: (
+                response: { status: string | number },
+                meta,
+                arg
+            ) => response.status,
         }),
         getAllFeeds: build.query<paginatedFeedType, void>({
             query: () => 'api/feeds',
