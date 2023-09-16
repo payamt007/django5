@@ -17,6 +17,8 @@ from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 from helper import save_post
 from base.permissions import IsOwner
+from base.tasks import parse_feed_item
+from django.core.cache import cache
 
 
 class PostViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
@@ -99,33 +101,23 @@ class ForceRefreshAPIview(APIView):
     """
     APIView for refreshing status of failed feeds
     """
-
-    allowed_methods = ["post"]
     permission_classes = [IsOwner]
 
-    @extend_schema(request=ForceRefreshSerializer)
+    @extend_schema(request=ForceRefreshSerializer, summary="Feed retry request")
     def post(self, request) -> Response:
         serializer = ForceRefreshSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         id = serializer.validated_data["id"]
-        feed = Feed.objects.get(id=id)
-
-        try:
-            feed_content = feedparser.parse(feed.link)
-            for item in feed_content.entries:
-                old_post = Post.objects.filter(link=item.link).first()
-                if not old_post:
-                    save_post(item, feed)
-            feed.fails = 0
-            feed.stopped = False
-            feed.save()
+        cache.delete(f"last_feed_update_time_{id}")
+        feed_parse_retry = parse_feed_item(feed_id=id, retry=True)
+        if feed_parse_retry:
             return Response(
                 data={
-                    "message": "Feed refresh Success! Feed returned to normal scrapping schedule!"
+                    "message": "Feed refresh Success! Feed returned to normal scrapping schedule"
                 },
                 status=status.HTTP_200_OK,
             )
-        except Exception:
+        else:
             return Response(
                 data={"message": "Feed refresh Failed! Sorry!"},
                 status=status.HTTP_406_NOT_ACCEPTABLE,

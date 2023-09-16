@@ -21,8 +21,8 @@ def read_feed_links() -> None:
 def parse_feed_item(feed_id: int, retry: bool = False):
     feed = Feed.objects.get(id=feed_id)
     try:
-        if feed.title == "tasnim0":
-            raise Exception("Chelen Balam Shetted!")
+        # if feed.title == "tasnim0":
+        #     raise Exception("Chelen Balam Shetted!")
         feed_content = feedparser.parse(feed.link)
         last_feed_update_time = cache.get(f"last_feed_update_time_{feed_id}", None)
         if hasattr(feed_content.feed, "updated") and last_feed_update_time == str(feed_content.feed.updated):
@@ -32,9 +32,11 @@ def parse_feed_item(feed_id: int, retry: bool = False):
                 save_post(item, feed)
             if retry:
                 feed.fails = 0
+                feed.stopped = False
                 feed.save()
             if hasattr(feed_content.feed, "updated"):
                 cache.set(f"last_feed_update_time_{feed_id}", feed_content.feed.updated)
+            return True
     except Exception as e:
         max_exceptions = settings.FEED_READER["MAX_FEED_READER_ERRORS"]
         countdown = settings.FEED_READER["FEED_READER_RETRY_TIME"]

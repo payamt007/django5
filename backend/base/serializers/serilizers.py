@@ -58,6 +58,13 @@ class FeedDeleteSerializer(serializers.Serializer):
 class ForceRefreshSerializer(serializers.Serializer[str]):
     id = serializers.IntegerField()
 
+    def validate_id(self, value: int):
+        try:
+            Feed.objects.get(id=value)
+            return value
+        except Feed.DoesNotExist:
+            raise serializers.ValidationError("No such Feed id!")
+
 
 class FilterSerializer(serializers.Serializer):
     feed = serializers.IntegerField(required=False)
