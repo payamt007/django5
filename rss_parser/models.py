@@ -16,6 +16,6 @@ class Post(models.Model):
     title = models.CharField(max_length=200, null=True, blank=True)
     link = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField()
-    readed = models.BooleanField(default=False)
+    read = models.BooleanField(default=False)
     followed = models.BooleanField(default=False)
     pubDate = models.DateTimeField(auto_now=True)

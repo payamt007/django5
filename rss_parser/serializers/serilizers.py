@@ -6,7 +6,7 @@ class UpdatePostSerializer(serializers.ModelSerializer[Post]):
     class Meta:
         model = Post
         fields = (
-            "readed",
+            "read",
             "followed",
         )
 
@@ -68,6 +68,6 @@ class ForceRefreshSerializer(serializers.Serializer[str]):
 
 class FilterSerializer(serializers.Serializer):
     feed = serializers.IntegerField(required=False)
-    readed = serializers.BooleanField(required=False)
+    read = serializers.BooleanField(required=False)
     followed = serializers.BooleanField(required=False)
     order_by = serializers.ChoiceField(["pubDate", "-pubDate"], required=True)
