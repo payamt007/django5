@@ -1,6 +1,6 @@
 import feedparser
 from celery import shared_task
-from base.models import Feed, Post
+from rss_parser.models import Feed
 from django.core.cache import cache
 from django.conf import settings
 from celery.utils.log import get_task_logger
@@ -13,6 +13,7 @@ logger = get_task_logger(__name__)
 def read_feed_links() -> None:
     feeds = Feed.objects.filter(stopped=False, followed=True, fails=0)
     logger.info(f'Feed paring task start for {feeds}')
+    print("feeds", feeds)
     for feed in feeds:
         parse_feed_item.apply_async(args=[feed.id])
 

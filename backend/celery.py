@@ -21,7 +21,7 @@ def debug_task(self) -> None:
 
 app.conf.beat_schedule = {
     'scrap_task': {
-        'task': 'base.tasks.read_feed_links',
+        'task': 'api.tasks.read_feed_links',
         'schedule': timedelta(seconds=15),
     },
 }
