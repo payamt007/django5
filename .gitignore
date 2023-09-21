@@ -19,7 +19,6 @@ db.sqlite3
 node_modules/
 webpack-stats.json
 yarn-error.log
-
 /ethica_server/settings/**
 !/ethica_server/settings/__init__.py
 !/ethica_server/settings/base.py
@@ -45,4 +44,3 @@ celerybeat-schedule.bak
 celerybeat-schedule.dat
 celerybeat-schedule.dir
 .env
-.db.sqlite3
