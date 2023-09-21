@@ -4,21 +4,21 @@ services:
   redis:
     image: redis:7.2
     ports:
-      - 6379:6379
+      - "6379:6379"
   db:
     image: postgres:15.4
     env_file:
-      - ./backend/.env
+      - ./.env
     ports:
-      - 5432:5432
+      - "5432:5432"
   api:
     build:
-      context: ./backend
+      context: .
       dockerfile: Dockerfile
     ports:
-      - 8000:8000
+      - "8000:8000"
     env_file:
-      - ./backend/.env
+      - ./.env
     volumes:
       - .:/app
     depends_on:
@@ -26,31 +26,24 @@ services:
       - db
   worker:
     build:
-      context: ./backend
+      context: .
       dockerfile: celery-Dockerfile
-    #command: celery -A backend.celery worker --loglevel=info --pool=solo
     command: celery -A backend.celery worker --loglevel=info -P eventlet
     env_file:
-      - ./backend/.env
+      - ./.env
     depends_on:
       - api
   beat:
     build:
-      context: ./backend
+      context: .
       dockerfile: celery-Dockerfile
     command: celery -A backend.celery beat --loglevel=info
     depends_on:
       - api
   mkdocs:
     build:
-      context: ./backend
+      context: .
       dockerfile: docs-Dockerfile
     command: /bin/sh -c "python -m mkdocs build && python -m mkdocs serve -a 0.0.0.0:7000"
-    #volumes:
-    #  - .:/app
     ports:
-      - 7000:7000
-  frontend:
-    build: ./frontend
-    ports:
-      - 3000:3000
+      - "7000:7000"

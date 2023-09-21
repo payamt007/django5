@@ -6,7 +6,7 @@ from rss_parser.models import Feed, Post
 from rss_parser.tasks import read_feed_links, parse_feed_item
 from django.contrib.auth.models import User
 from django.conf import settings
-from .heper import SampleEntryClass
+from .helper import SampleEntryClass
 
 
 class FeedReaderTestCase(TestCase):
