@@ -14,7 +14,7 @@ webpack-stats.json
 npm-debug.log
 Thumbs.db
 __pycache__
-__pycache__/*
+__pycache__/
 build/
 db.sqlite3
 node_modules/
