@@ -2,25 +2,25 @@
 
 *APIView for converting input string*
 
-::: base.tasks.read_feed_links
+::: rss_parser.tasks.read_feed_links
 
 ---
 
-::: base.tasks.retry_failed_feeds
+::: rss_parser.tasks.parse_feed_item
 
 ---
 
-::: base.views.api.PostViewSet
+::: rss_parser.views.api.PostViewSet
 
 ---
 
-::: base.views.api.FeedViewSet
+::: rss_parser.views.api.FeedViewSet
 
 ---
 
-::: base.views.api.PostFilterAPIView
+::: rss_parser.views.api.PostFilterAPIView
 
 ---
 
-::: base.views.api.ForceRefreshAPIview
+::: rss_parser.views.api.ForceRefreshAPIview
 
