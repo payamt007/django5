@@ -19,7 +19,7 @@ def read_feed_links() -> None:
 
 
 @shared_task
-def parse_feed_item(feed_id: int, retry: bool = False) -> None:
+def parse_feed_item(feed_id: int, retry: bool = False) -> bool:
     feed = Feed.objects.get(id=feed_id)
     try:
         # if feed.title == "test":
@@ -29,7 +29,7 @@ def parse_feed_item(feed_id: int, retry: bool = False) -> None:
         if hasattr(feed_content.feed, "updated") and last_feed_update_time == str(
             feed_content.feed.updated
         ):
-            return
+            return False
         else:
             for item in feed_content.entries:
                 save_post(item, feed)
@@ -39,7 +39,7 @@ def parse_feed_item(feed_id: int, retry: bool = False) -> None:
                 feed.save()
             if hasattr(feed_content.feed, "updated"):
                 cache.set(f"last_feed_update_time_{feed_id}", feed_content.feed.updated)
-            return
+            return True
     except Exception as e:
         max_exceptions = settings.FEED_READER["MAX_FEED_READER_ERRORS"]
         countdown = settings.FEED_READER["FEED_READER_RETRY_TIME"]
