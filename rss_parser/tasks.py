@@ -1,10 +1,11 @@
 import feedparser
 from celery import shared_task
-from rss_parser.models import Feed
-from django.core.cache import cache
-from django.conf import settings
 from celery.utils.log import get_task_logger
+from django.conf import settings
+from django.core.cache import cache
+
 from helper import save_post
+from rss_parser.models import Feed
 
 logger = get_task_logger(__name__)
 
@@ -12,20 +13,22 @@ logger = get_task_logger(__name__)
 @shared_task
 def read_feed_links() -> None:
     feeds = Feed.objects.filter(stopped=False, followed=True, fails=0)
-    logger.info(f'Feed paring task start for {feeds}')
+    logger.info(f"Feed paring task start for {feeds}")
     for feed in feeds:
         parse_feed_item.apply_async(args=[feed.id])
 
 
 @shared_task
-def parse_feed_item(feed_id: int, retry: bool = False):
+def parse_feed_item(feed_id: int, retry: bool = False) -> None:
     feed = Feed.objects.get(id=feed_id)
     try:
-        # if feed.title == "tasnim0":
-        #     raise Exception("Chelen Balam Shetted!")
+        # if feed.title == "test":
+        #     raise Exception("Error!")
         feed_content = feedparser.parse(feed.link)
         last_feed_update_time = cache.get(f"last_feed_update_time_{feed_id}", None)
-        if hasattr(feed_content.feed, "updated") and last_feed_update_time == str(feed_content.feed.updated):
+        if hasattr(feed_content.feed, "updated") and last_feed_update_time == str(
+            feed_content.feed.updated
+        ):
             return
         else:
             for item in feed_content.entries:
@@ -36,7 +39,7 @@ def parse_feed_item(feed_id: int, retry: bool = False):
                 feed.save()
             if hasattr(feed_content.feed, "updated"):
                 cache.set(f"last_feed_update_time_{feed_id}", feed_content.feed.updated)
-            return True
+            return
     except Exception as e:
         max_exceptions = settings.FEED_READER["MAX_FEED_READER_ERRORS"]
         countdown = settings.FEED_READER["FEED_READER_RETRY_TIME"]

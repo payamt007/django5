@@ -1,14 +1,15 @@
 import json
-
-from rest_framework.views import APIView
-from .serilizers import UserRegistrationSerializer, UserLoginSerializer
-from django.contrib.auth.models import User
-from rest_framework import status
-from rest_framework.response import Response
 from datetime import datetime, timedelta, timezone
+
 import jwt
 from django.conf import settings
+from django.contrib.auth.models import User
 from drf_spectacular.utils import extend_schema
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .serilizers import UserLoginSerializer, UserRegistrationSerializer
 
 
 class UserRegistrationAPIView(APIView):

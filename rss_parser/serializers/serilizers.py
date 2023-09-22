@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from rss_parser.models import Post, Feed
+
+from rss_parser.models import Feed, Post
 
 
 class UpdatePostSerializer(serializers.ModelSerializer[Post]):

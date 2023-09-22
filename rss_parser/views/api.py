@@ -1,21 +1,16 @@
-from rest_framework import viewsets
-from rest_framework import mixins
-from rss_parser.models import Post, Feed
-from rss_parser.serializers import (
-    PostSerializer,
-    CreateOrUpdateFeedSerializer,
-    FeedSerializer,
-    FilterSerializer,
-    ForceRefreshSerializer,
-    UpdatePostSerializer,
-)
-from rest_framework.views import APIView
-from rest_framework import status
-from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
-from rss_parser.permissions import IsOwner
-from rss_parser.tasks import parse_feed_item
 from django.core.cache import cache
+from drf_spectacular.utils import extend_schema
+from rest_framework import mixins, status, viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from rss_parser.models import Feed, Post
+from rss_parser.permissions import IsOwner
+from rss_parser.serializers import (CreateOrUpdateFeedSerializer,
+                                    FeedSerializer, FilterSerializer,
+                                    ForceRefreshSerializer, PostSerializer,
+                                    UpdatePostSerializer)
+from rss_parser.tasks import parse_feed_item
 
 
 class PostViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):

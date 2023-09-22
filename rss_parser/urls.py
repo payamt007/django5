@@ -1,11 +1,8 @@
 from django.urls import include, path
 from rest_framework import routers
-from rss_parser.views import (
-    ForceRefreshAPIview,
-    PostFilterAPIView,
-    PostViewSet,
-    FeedViewSet,
-)
+
+from rss_parser.views import (FeedViewSet, ForceRefreshAPIview,
+                              PostFilterAPIView, PostViewSet)
 
 router = routers.DefaultRouter()
 router.register(r"posts", PostViewSet)

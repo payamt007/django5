@@ -1,5 +1,7 @@
 from django.urls import path
+
 from authentication.views import UserRegistrationAPIView
+
 from .views import TokenGeneratorVIew
 
 urlpatterns = [

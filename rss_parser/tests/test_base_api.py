@@ -1,9 +1,9 @@
-from rss_parser.views import PostViewSet
-from rss_parser.models import Feed, Post
-from rest_framework.test import APITestCase
-from rest_framework import status
 from django.contrib.auth.models import User
-from rest_framework.test import APIClient
+from rest_framework import status
+from rest_framework.test import APIClient, APITestCase
+
+from rss_parser.models import Feed, Post
+from rss_parser.views import PostViewSet
 
 
 class PostViewSetTest(APITestCase):

@@ -1,11 +1,13 @@
 import datetime
+from unittest.mock import MagicMock, patch
 
-from django.test import TestCase
-from unittest.mock import patch, MagicMock
-from rss_parser.models import Feed, Post
-from rss_parser.tasks import read_feed_links, parse_feed_item
-from django.contrib.auth.models import User
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.test import TestCase
+
+from rss_parser.models import Feed, Post
+from rss_parser.tasks import parse_feed_item, read_feed_links
+
 from .helper import SampleEntryClass
 
 

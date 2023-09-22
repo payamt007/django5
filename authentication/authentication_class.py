@@ -1,7 +1,7 @@
-from django.contrib.auth.models import User
-from rest_framework import authentication
 import jwt
 from django.conf import settings
+from django.contrib.auth.models import User
+from rest_framework import authentication
 
 
 class CookieAuthentication(authentication.BaseAuthentication):
