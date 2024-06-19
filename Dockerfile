@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.11.2-slim-buster
+FROM python:3.12.4-slim-bookworm
 
 # set work directory
 WORKDIR /app
@@ -14,7 +14,8 @@ COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
 RUN apt-get update && \
-    apt-get install -y netcat && \
+    apt-get install -y dos2unix &&\
+    apt-get install -y netcat-openbsd && \
     rm -rf /var/lib/apt/lists/*
 
 # copy project

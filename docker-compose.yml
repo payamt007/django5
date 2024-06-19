@@ -2,11 +2,11 @@ version: "3.9"
 
 services:
   redis:
-    image: redis:7.2
+    image: redis:7.2.5-alpine
     ports:
       - "6381:6379"
   db:
-    image: postgres:15.4
+    image: postgres:16.3-bookworm
     env_file:
       - ./.env
     ports:
@@ -16,7 +16,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8001:8001"
     env_file:
       - ./.env
     volumes:
@@ -24,26 +24,26 @@ services:
     depends_on:
       - redis
       - db
-  worker:
-    build:
-      context: .
-      dockerfile: celery-Dockerfile
-    command: celery -A backend.celery worker --loglevel=info -P eventlet
-    env_file:
-      - ./.env
-    depends_on:
-      - api
-  beat:
-    build:
-      context: .
-      dockerfile: celery-Dockerfile
-    command: celery -A backend.celery beat --loglevel=info
-    depends_on:
-      - api
-  mkdocs:
-    build:
-      context: .
-      dockerfile: docs-Dockerfile
-    command: /bin/sh -c "python -m mkdocs build && python -m mkdocs serve -a 0.0.0.0:7000"
-    ports:
-      - "7000:7000"
+#  worker:
+#    build:
+#      context: .
+#      dockerfile: celery-Dockerfile
+#    command: celery -A backend.celery worker --loglevel=info -P eventlet
+#    env_file:
+#      - ./.env
+#    depends_on:
+#      - api
+#  beat:
+#    build:
+#      context: .
+#      dockerfile: celery-Dockerfile
+#    command: celery -A backend.celery beat --loglevel=info
+#    depends_on:
+#      - api
+#  mkdocs:
+#    build:
+#      context: .
+#      dockerfile: docs-Dockerfile
+#    command: /bin/sh -c "python -m mkdocs build && python -m mkdocs serve -a 0.0.0.0:7000"
+#    ports:
+#      - "7000:7000"
